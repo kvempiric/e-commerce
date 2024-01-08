@@ -20,7 +20,7 @@ const userSchema = new Schema({
     type: String,
     isRequired: true,
   },
-  Address: {
+  address: {
     type: String,
     isRequired: true,
   },
