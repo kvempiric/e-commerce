@@ -1,40 +1,91 @@
+const { signupSchema, signinSchema } = require("../../utils/validator");
 const Product = require("./model");
+const multer = require("multer");
+const path = require("path");
 
-// const { signupSchema } = require("../../utils/validator");
+// Set storage images
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    return cb(null, path.join(__dirname, "../../uploads"));
+  },
+  filename: function (req, file, cb) {
+    cb(null, `${Date.now()}-${file.originalname}`);
+  },
+});
 
-exports.addProduct = async (req, res) => {
-  let { name, image, price, qty, rating, category } = req.body;
+// Initialize multer middleware
+const upload = multer({
+  storage: storage,
+}).single("mainImage");
 
-  try {
-    console.log(name, image, price, qty, rating, category);
-    const existProduct = await Product.findOne({ name });
-    if (existProduct) {
-      return res.status(400).json({
+const uploadAdditionalImages = multer({
+  storage: storage,
+}).array("photos", 5);
+
+exports.addProduct = (req, res) => {
+  upload(req, res, (err) => {
+    if (err) {
+      return res.status(500).json({
         success: false,
-        message: "product already exists",
+        message: err.message,
       });
     }
+    let mainImage = req.file ? req.file.path : null;
 
-    const newProduct = await Product.create({
-      name,
-      image,
-      price,
-      qty,
-      rating,
-      category,
-    });
-    newProduct.save();
+    uploadAdditionalImages(req, res, async (err) => {
+      if (err) {
+        return res.status(500).json({
+          success: false,
+          message: err.message,
+        });
+      }
+      let { name, price, qty, rating, category } = req.body;
+      let photos = req.files ? req.files.map((file) => file.path) : [];
 
-    return res.status(200).json({
-      success: true,
-      message: "product added Successfully",
+      try {
+        const { error } = productSchema.validate(
+          { name, mainImage, photos, price, qty, rating, category },
+          { error: { label: true, wrap: { label: false } } }
+        );
+
+        if (error) {
+          return res.status(400).json({
+            success: false,
+            message: error.message,
+          });
+        }
+
+        const existProduct = await Product.findOne({ name });
+        if (existProduct) {
+          return res.status(400).json({
+            success: false,
+            message: "Product already exists",
+          });
+        }
+
+        const newProduct = await Product.create({
+          name,
+          mainImage,
+          photos,
+          price,
+          qty,
+          rating,
+          category,
+        });
+        newProduct.save();
+
+        return res.status(200).json({
+          success: true,
+          message: "Product added successfully",
+        });
+      } catch (error) {
+        return res.status(500).json({
+          success: false,
+          message: error.message,
+        });
+      }
     });
-  } catch (error) {
-    return res.status(500).json({
-      success: false,
-      message: error.message,
-    });
-  }
+  });
 };
 
 exports.products = async (req, res) => {
@@ -48,7 +99,7 @@ exports.products = async (req, res) => {
           message: "Product not found",
         });
       }
-      console.log("result=====", result);
+      
     } else {
       const result = await Product.findById(productId).lean();
       if (!result) {
