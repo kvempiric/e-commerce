@@ -1,9 +1,9 @@
 const User = require("./model");
-const { signupSchema, signinSchema } = require("../../utils/validator");
 const {
   passwordBcrypt,
   checkBcryptPassword,
 } = require("../../utils/passwordBcrypt");
+const { signupSchema, signinSchema } = require("./validator");
 
 exports.signup = async (req, res) => {
   let { name, email, password, role, address, phone } = req.body;
@@ -88,6 +88,7 @@ exports.signin = async (req, res) => {
     return res.status(200).json({
       massage: "Login successfully",
       isSuccess: true,
+      result,
     });
   } catch (error) {
     return res.status(500).json({

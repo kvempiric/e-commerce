@@ -20,7 +20,7 @@ const productSchema = new Schema(
       required: true,
       unique: true,
     },
-    qty: {
+    availableQty: {
       type: Number,
       required: true,
     },

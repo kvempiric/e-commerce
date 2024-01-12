@@ -1,8 +1,8 @@
-const { productSchema } = require("../../utils/validator");
 const Product = require("./model");
 const multer = require("multer");
 const path = require("path");
 const fs = require("fs");
+const { productSchema } = require("./validator");
 
 // Set storage images
 const storage = multer.diskStorage({
@@ -29,15 +29,21 @@ exports.addProduct = (req, res) => {
         message: err.message,
       });
     }
-    let { name, price, qty, rating, category } = req.body;
-    const mainImage = req.files.mainImage[0].path;
+    let { name, price, availableQty, rating, category } = req.body;
+    const mainImagePath = req.files.mainImage[0].path;
+    const pathSplit = mainImagePath.split("backend");
+    const mainImage = pathSplit[1];
     const images = req.files?.images
-      ? req.files?.images.map((file) => file.path)
+      ? req.files?.images.map((file) => {
+          const imagePath = file.path;
+          const imagePathSplit = imagePath.split("backend");
+          return imagePathSplit[1];
+        })
       : [];
 
     try {
       const { error } = productSchema.validate(
-        { name, mainImage, images, price, qty, rating, category },
+        { name, mainImage, images, price, availableQty, rating, category },
         { error: { label: true, wrap: { label: false } } }
       );
 
@@ -61,7 +67,7 @@ exports.addProduct = (req, res) => {
         mainImage,
         images,
         price,
-        qty,
+        availableQty,
         rating,
         category,
       });
@@ -126,7 +132,7 @@ exports.updateProduct = async (req, res) => {
     }
 
     const { productId } = req.params;
-    let { name, price, qty, rating, category } = req.body;
+    let { name, price, availableQty, rating, category } = req.body;
 
     const mainImage = req.files.mainImage
       ? req.files.mainImage[0].path
@@ -138,7 +144,7 @@ exports.updateProduct = async (req, res) => {
 
     try {
       const { error } = productSchema.validate(
-        { name, mainImage, images, price, qty, rating, category },
+        { name, mainImage, images, price, availableQty, rating, category },
         { error: { label: true, wrap: { label: false } } }
       );
 
@@ -185,7 +191,7 @@ exports.updateProduct = async (req, res) => {
       const updatedData = {
         name,
         price,
-        qty,
+        availableQty,
         rating,
         category,
       };
