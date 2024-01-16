@@ -33,7 +33,6 @@ function signin() {
         if (!response.data.isSuccess) {
           console.log("response not getting");
         }
-        console.log(response.data.result._id);
         setAlertpop({
           show: true,
           type: "success",

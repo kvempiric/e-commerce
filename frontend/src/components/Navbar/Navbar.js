@@ -1,12 +1,14 @@
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 
 function Navbar() {
   const [isUserLogin, setIsUserLogin] = useState("");
+  const item = useSelector((state) => state.cart);
+
   useEffect(() => {
     setIsUserLogin(localStorage.getItem("e-commerce_userId"));
   }, []);
-  console.log("userId", isUserLogin);
 
   return (
     <div className="container-fluid bg-green-500">
@@ -18,7 +20,7 @@ function Navbar() {
         </div>
         <div className="">
           <Link href={"/cart"} className="p-4 text-xl">
-            Mycart
+            Mycart{item.length > 0 ? `(${item.length})` : ""}
           </Link>
           <Link href={"/about"} className="p-4 text-xl">
             About

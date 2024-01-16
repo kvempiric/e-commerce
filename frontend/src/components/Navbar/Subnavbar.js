@@ -4,6 +4,7 @@ import Card from "../Cards/Card";
 function Subnavbar() {
   const [products, setProducts] = useState([]);
   const [filterData, setFilterData] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   const fetchData = async () => {
     try {
@@ -14,6 +15,7 @@ function Subnavbar() {
       const data = await response.json();
       setProducts(data.result);
       setFilterData(data.result);
+      setIsLoading(false);
     } catch (error) {
       console.error("Error fetching data:", error);
     }
@@ -30,6 +32,7 @@ function Subnavbar() {
       const productFilterData = products.filter(
         (item) => item.category === e.target.value
       );
+      console.log("productFilterData", productFilterData);
       setFilterData(productFilterData);
     }
   };
@@ -37,7 +40,7 @@ function Subnavbar() {
   return (
     <>
       <div className="container mx-auto py-5 border-2">
-        <div class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-8 gap-0 justify-center">
+        <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-8 gap-0 justify-center">
           <button
             className="mx-auto bg-slate-700 text-white px-6 py-3 rounded-3xl mb-4 md:mb-4"
             value={"all"}
@@ -97,9 +100,7 @@ function Subnavbar() {
         </div>
       </div>
       <div className="container mx-auto">
-        {/* <div class="grid grid-cols-4 gap-4"> */}
-        <Card products={filterData} />
-        {/* </div> */}
+        {!isLoading && <Card products={filterData} />}
       </div>
     </>
   );
