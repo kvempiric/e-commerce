@@ -8,6 +8,7 @@ const productSchema = Joi.object({
   availableQty: Joi.number().integer().required(),
   rating: Joi.number().integer().min(0).max(5).required(),
   category: Joi.string().required(),
+  sellerRef:Joi.string().required(),
 });
 
 module.exports = {

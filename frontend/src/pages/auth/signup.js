@@ -87,7 +87,7 @@ function signup() {
               value={formik.values.name}
             />
             {formik.touched.name && formik.errors.name && (
-              <div className="text-red-500 text-sm">{formik.errors.name}</div>
+              <p className="text-red-500 text-sm">{formik.errors.name}</p>
             )}
           </div>
 
@@ -108,7 +108,7 @@ function signup() {
               value={formik.values.phone}
             />
             {formik.touched.phone && formik.errors.phone && (
-              <div className="text-red-500 text-sm">{formik.errors.phone}</div>
+              <p className="text-red-500 text-sm">{formik.errors.phone}</p>
             )}
           </div>
 
@@ -129,7 +129,7 @@ function signup() {
               value={formik.values.email}
             />
             {formik.touched.email && formik.errors.email && (
-              <div className="text-red-500 text-sm">{formik.errors.email}</div>
+              <p className="text-red-500 text-sm">{formik.errors.email}</p>
             )}
           </div>
 
@@ -150,9 +150,9 @@ function signup() {
               value={formik.values.password}
             />
             {formik.touched.password && formik.errors.password && (
-              <div className="text-red-500 text-sm">
+              <p className="text-red-500 text-sm">
                 {formik.errors.password}
-              </div>
+              </p>
             )}
           </div>
 
@@ -173,9 +173,9 @@ function signup() {
               value={formik.values.address}
             />
             {formik.touched.address && formik.errors.address && (
-              <div className="text-red-500 text-sm">
+              <p className="text-red-500 text-sm">
                 {formik.errors.address}
-              </div>
+              </p>
             )}
           </div>
 
@@ -198,7 +198,7 @@ function signup() {
               <option value="seller">seller</option>
             </select>
             {formik.touched.role && formik.errors.role && (
-              <div className="text-red-500 text-sm">{formik.errors.role}</div>
+              <p className="text-red-500 text-sm">{formik.errors.role}</p>
             )}
           </div>
 

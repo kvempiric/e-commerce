@@ -1,14 +1,16 @@
 import Link from "next/link";
+import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 
 function Navbar() {
-  const [isUserLogin, setIsUserLogin] = useState("");
+  const router = useRouter();
   const item = useSelector((state) => state.cart);
+  const [isUserLogin, setIsUserLogin] = useState("");
 
   useEffect(() => {
     setIsUserLogin(localStorage.getItem("e-commerce_userId"));
-  }, []);
+  }, [isUserLogin]);
 
   return (
     <div className="container-fluid bg-green-500">
@@ -19,6 +21,16 @@ function Navbar() {
           </Link>
         </div>
         <div className="">
+          <button
+            onClick={() =>
+              isUserLogin
+                ? router.push("/addProduct")
+                : alert("please first signup or login...")
+            }
+            className="p-4 text-xl"
+          >
+            Add Product
+          </button>
           <Link href={"/cart"} className="p-4 text-xl">
             Mycart{item.length > 0 ? `(${item.length})` : ""}
           </Link>
@@ -38,13 +50,15 @@ function Navbar() {
               </Link>
             </>
           ) : (
-            <Link
+            <button
               href={"/"}
               className="p-4 text-xl"
-              onClick={localStorage.removeItem("e-commerce_userId")}
+              onClick={() => {
+                localStorage.removeItem("e-commerce_userId"), router.reload();
+              }}
             >
               Logout
-            </Link>
+            </button>
           )}
         </div>
       </div>

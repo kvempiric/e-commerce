@@ -31,9 +31,13 @@ const productSchema = new Schema(
     category: {
       type: String,
       required: true,
-    }
+    },
+    sellerRef: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+    },
   },
   { timestamps: true }
 );
 
-module.exports = mongoose.model("product", productSchema);
+module.exports = mongoose.model("Product", productSchema);

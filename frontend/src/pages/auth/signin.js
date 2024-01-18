@@ -45,6 +45,7 @@ function signin() {
             show: false,
           });
           router.push("/");
+          router.reload();
         }, 2000);
       } catch (error) {
         console.error("API error:", error);
@@ -76,7 +77,7 @@ function signin() {
               value={formik.values.email}
             />
             {formik.touched.email && formik.errors.email && (
-              <div className="text-red-500 text-sm">{formik.errors.email}</div>
+              <p className="text-red-500 text-sm">{formik.errors.email}</p>
             )}
           </div>
 
@@ -99,9 +100,7 @@ function signin() {
               value={formik.values.password}
             />
             {formik.touched.password && formik.errors.password && (
-              <div className="text-red-500 text-sm">
-                {formik.errors.password}
-              </div>
+              <p className="text-red-500 text-sm">{formik.errors.password}</p>
             )}
           </div>
 

@@ -3,6 +3,7 @@ const multer = require("multer");
 const path = require("path");
 const fs = require("fs");
 const { productSchema } = require("./validator");
+const { promisify } = require("util");
 
 // Set storage images
 const storage = multer.diskStorage({
@@ -21,15 +22,12 @@ const uploadImages = multer({
   { name: "mainImage", maxCount: 1 },
 ]);
 
-exports.addProduct = (req, res) => {
-  uploadImages(req, res, async (err) => {
-    if (err) {
-      return res.status(500).json({
-        success: false,
-        message: err.message,
-      });
-    }
-    let { name, price, availableQty, rating, category } = req.body;
+const uploadAsync = promisify(uploadImages);
+
+exports.addProduct = async (req, res) => {
+  try {
+    await uploadAsync(req, res);
+    let { name, price, availableQty, rating, category, sellerRef } = req.body;
     const mainImagePath = req.files.mainImage[0].path;
     const pathSplit = mainImagePath.split("backend");
     const mainImage = pathSplit[1];
@@ -41,49 +39,48 @@ exports.addProduct = (req, res) => {
         })
       : [];
 
-    try {
-      const { error } = productSchema.validate(
-        { name, mainImage, images, price, availableQty, rating, category },
-        { error: { label: true, wrap: { label: false } } }
-      );
+    const { error } = productSchema.validate(
+      { name, mainImage, images, price, availableQty, rating, category, sellerRef },
+      { error: { label: true, wrap: { label: false } } }
+    );
 
-      if (error) {
-        return res.status(400).json({
-          success: false,
-          message: error.message,
-        });
-      }
-
-      const existProduct = await Product.findOne({ name });
-      if (existProduct) {
-        return res.status(400).json({
-          success: false,
-          message: "Product already exists",
-        });
-      }
-
-      const newProduct = await Product.create({
-        name,
-        mainImage,
-        images,
-        price,
-        availableQty,
-        rating,
-        category,
-      });
-      newProduct.save();
-
-      return res.status(200).json({
-        success: true,
-        message: "Product added successfully",
-      });
-    } catch (error) {
-      return res.status(500).json({
+    if (error) {
+      return res.status(400).json({
         success: false,
         message: error.message,
       });
     }
-  });
+
+    const existProduct = await Product.findOne({ name });
+    if (existProduct) {
+      return res.status(400).json({
+        success: false,
+        message: "Product already exists",
+      });
+    }
+
+    const newProduct = await Product.create({
+      name,
+      mainImage,
+      images,
+      price,
+      availableQty,
+      rating,
+      category,
+      sellerRef
+    });
+    newProduct.save();
+
+    return res.status(200).json({
+      success: true,
+      message: "Product added successfully",
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
 };
 
 exports.products = async (req, res) => {
