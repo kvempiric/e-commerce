@@ -31,6 +31,9 @@ function Navbar() {
           >
             Add Product
           </button>
+          <Link href={"/order"} className="p-4 text-xl">
+            Order
+          </Link>
           <Link href={"/cart"} className="p-4 text-xl">
             Mycart{item.length > 0 ? `(${item.length})` : ""}
           </Link>

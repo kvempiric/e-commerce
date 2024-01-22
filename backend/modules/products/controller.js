@@ -40,7 +40,16 @@ exports.addProduct = async (req, res) => {
       : [];
 
     const { error } = productSchema.validate(
-      { name, mainImage, images, price, availableQty, rating, category, sellerRef },
+      {
+        name,
+        mainImage,
+        images,
+        price,
+        availableQty,
+        rating,
+        category,
+        sellerRef,
+      },
       { error: { label: true, wrap: { label: false } } }
     );
 
@@ -67,7 +76,7 @@ exports.addProduct = async (req, res) => {
       availableQty,
       rating,
       category,
-      sellerRef
+      sellerRef,
     });
     newProduct.save();
 
@@ -129,7 +138,7 @@ exports.updateProduct = async (req, res) => {
     }
 
     const { productId } = req.params;
-    let { name, price, availableQty, rating, category } = req.body;
+    let { name, price, availableQty, rating, category, sellerRef } = req.body;
 
     const mainImage = req.files.mainImage
       ? req.files.mainImage[0].path
@@ -141,7 +150,16 @@ exports.updateProduct = async (req, res) => {
 
     try {
       const { error } = productSchema.validate(
-        { name, mainImage, images, price, availableQty, rating, category },
+        {
+          name,
+          mainImage,
+          images,
+          price,
+          availableQty,
+          rating,
+          category,
+          sellerRef,
+        },
         { error: { label: true, wrap: { label: false } } }
       );
 
@@ -187,10 +205,13 @@ exports.updateProduct = async (req, res) => {
 
       const updatedData = {
         name,
+        mainImage,
+        images,
         price,
         availableQty,
         rating,
         category,
+        sellerRef,
       };
 
       if (mainImage) {

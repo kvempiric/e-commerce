@@ -12,7 +12,7 @@ export default function App({ Component, pageProps }) {
   useEffect(() => {
     setIsUserLogin(localStorage.getItem("e-commerce_userId"));
     if (isUserLogin) {
-      router.push("/")
+      router.push("")
     }
   }, [isUserLogin]);
   return (

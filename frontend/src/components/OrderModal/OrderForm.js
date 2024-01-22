@@ -1,10 +1,21 @@
 import React, { useState } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
+import axios from "axios";
+import AlertMessage from "../Alert/AlertMessage";
+import { useDispatch } from "react-redux";
+import { orderPlace } from "@/redux/features/orderSlice";
 
 function OrderForm(props) {
   const { productDetails } = props;
   const [quantity, setQuantity] = useState(1);
+  const [Alertpop, setAlertpop] = useState({
+    show: false,
+    type: "",
+    message: "",
+  });
+  const dispatch = useDispatch();
+
   const QtyOptions = Array.from({ length: 10 }, (_, index) => index + 1);
   const validationSchema = Yup.object().shape({
     name: Yup.string().required("Name is required"),
@@ -12,7 +23,6 @@ function OrderForm(props) {
     address: Yup.string().required("Address is required"),
     payment: Yup.string().required("Category is required"),
   });
-  console.log("productDetails", productDetails);
   const formik = useFormik({
     initialValues: {
       name: "",
@@ -21,15 +31,58 @@ function OrderForm(props) {
       payment: "cash on delivery",
     },
     validationSchema: validationSchema,
-    onSubmit: (values) => {
-      // Your form submission logic goes here
-      console.log(values);
+    onSubmit: async (values) => {
+      let uid = localStorage.getItem("e-commerce_userId");
+      try {
+        values.sellerRef = productDetails.sellerRef;
+        values.totalAmount = productDetails.price * quantity;
+        values.orderStatus = "pending";
+        values.userId = uid;
+        values.products = [
+          {
+            productId: productDetails._id,
+            qty: quantity,
+          },
+        ];
+        const response = await axios.post(
+          "http://localhost:8000/order",
+          values
+        );
+        console.log("response", response.data.message);
+
+        if (!response.data.success) {
+          console.log("response not getting");
+        }
+
+        setAlertpop({
+          show: true,
+          type: "success",
+          message: response.data.message,
+        });
+
+        formik.resetForm();
+        props.handleCloseModal();
+        dispatch(orderPlace({...productDetails, values}))
+        // productDetails.availableQty = productDetails.availableQty - quantity;
+        // console.log("productDetails====>>>",productDetails);
+
+        setTimeout(() => {
+          setAlertpop({
+            show: false,
+          });
+        }, 2000);
+      } catch (error) {
+        console.error("API error:", error);
+      }
     },
   });
+  console.log("productDetails", productDetails.availableQty - 1);
+  console.log("productDetails", productDetails);
 
   return (
     <>
       {/* Main modal */}
+      {Alertpop.show ? <AlertMessage Alertpop={Alertpop} /> : ""}
       {props.isModalOpen && (
         <div
           id="crud-modal"
@@ -46,7 +99,10 @@ function OrderForm(props) {
                 <button
                   type="button"
                   className="rounded-lg px-3 py-1 text-lg text-gray-600 hover:text-white bg-gray-200 hover:bg-gray-500"
-                  onClick={() => props.handleCloseModal()}
+                  onClick={() => {
+                    formik.resetForm();
+                    props.handleCloseModal();
+                  }}
                 >
                   Close
                 </button>

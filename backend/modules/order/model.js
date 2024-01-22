@@ -1,31 +1,31 @@
-const { Schema, model } = require("mongoose");
+const { Schema, mongoose, model } = require("mongoose");
 
 const orderSchema = new Schema(
   {
-    orderId: {
-      type: Schema.Types.ObjectId,
+    userId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
       required: true,
     },
-    userId: {
-      type: Schema.Types.ObjectId,
-      ref: "User",
+    name: {
+      type: String,
+      required: true,
+    },
+    phone: {
+      type: Number,
+      required: true,
+    },
+    address: {
+      type: String,
       required: true,
     },
     products: [
       {
         productId: {
-          type: Schema.Types.ObjectId,
-          required: true,
-        },
-        name: {
-          type: String,
+          type: mongoose.Schema.Types.ObjectId,
           required: true,
         },
         qty: {
-          type: Number,
-          required: true,
-        },
-        price: {
           type: Number,
           required: true,
         },
@@ -41,8 +41,12 @@ const orderSchema = new Schema(
       default: "pending",
       required: true,
     },
+    payment: {
+      type: String,
+      required: true,
+    },
     sellerRef: {
-      type: Schema.Types.ObjectId,
+      type: mongoose.Schema.Types.ObjectId,
       ref: "User",
     },
   },

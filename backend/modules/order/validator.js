@@ -6,8 +6,10 @@ const productSchema = Joi.object({
 });
 
 const orderSchema = Joi.object({
-  orderId: Joi.string().required(),
   userId: Joi.string().required(),
+  name: Joi.string().required(),
+  phone: Joi.number().required(),
+  address: Joi.string().required(),
   products: Joi.array().items(productSchema).required(),
   totalAmount: Joi.number().required(),
   orderStatus: Joi.string().required(),

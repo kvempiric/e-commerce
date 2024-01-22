@@ -4,7 +4,6 @@ import { useSelector } from "react-redux";
 
 function index() {
   const cartProduct = useSelector((state) => state.cart);
-  console.log("cartProduct======>>>", cartProduct);
   return (
     <div>
       <div className="container mx-auto">

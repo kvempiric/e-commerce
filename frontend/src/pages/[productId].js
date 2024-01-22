@@ -33,9 +33,19 @@ function productId() {
 
   return (
     <>
+      <OrderForm
+        isModalOpen={isModalOpen}
+        handleCloseModal={handleCloseModal}
+        productDetails={productDetails}
+      />
       <div className="container-fluid p-10">
         <div className="grid grid-cols-2">
-          <Carousel axis="vertical" showThumbs={false} centerMode={true} style={{ height: '400px' }}>
+          <Carousel
+            axis="vertical"
+            showThumbs={false}
+            centerMode={true}
+            style={{ height: "400px" }}
+          >
             {productDetails.images &&
               productDetails.images.map((item, index) => {
                 return (
@@ -72,12 +82,6 @@ function productId() {
           </div>
         </div>
       </div>
-
-      <OrderForm
-        isModalOpen={isModalOpen}
-        handleCloseModal={handleCloseModal}
-        productDetails={productDetails}
-      />
     </>
   );
 }

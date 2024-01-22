@@ -32,7 +32,6 @@ function Subnavbar() {
       const productFilterData = products.filter(
         (item) => item.category === e.target.value
       );
-      console.log("productFilterData", productFilterData);
       setFilterData(productFilterData);
     }
   };
