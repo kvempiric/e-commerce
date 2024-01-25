@@ -68,11 +68,13 @@ function index() {
           "Content-Type": "multipart/form-data",
         },
       });
+      console.log("response", response);
       setAlertpop({
         show: true,
         type: "success",
         message: response.data.message,
       });
+      setFormData({});
       setTimeout(() => {
         setAlertpop({
           show: false,

@@ -29,7 +29,6 @@ function signin() {
           "http://localhost:8000/signin",
           values
         );
-          console.log("response", response);
         if (!response.data.isSuccess) {
           console.log("response not getting");
         }
@@ -39,6 +38,7 @@ function signin() {
           message: response.data.massage,
         });
         localStorage.setItem("e-commerce_userId", response.data.result._id);
+        localStorage.setItem("role", response.data.result.role);
         formik.resetForm();
         setTimeout(() => {
           setAlertpop({

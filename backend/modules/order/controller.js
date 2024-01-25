@@ -83,3 +83,33 @@ exports.orderFetch = async (req, res) => {
     });
   }
 };
+
+exports.updateSingleField = async (req, res) => {
+  try {
+    const orderId = req.params.orderId;
+    const { orderStatus } = req.body; 
+    console.log(orderStatus);
+    const result = await Order.updateOne(
+      {_id:orderId},
+      { $set: { "orderStatus": orderStatus } }
+    ).lean();
+
+    if (!result) {
+      return res.status(404).json({
+        success: false,
+        message: "Order not found",
+      });
+    }
+
+    return res.status(200).json({
+      message: "Field updated successfully",
+      isSuccess: true,
+      result,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: error.message,
+    }); 
+  }
+};

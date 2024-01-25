@@ -26,7 +26,7 @@ function OrderForm(props) {
   const formik = useFormik({
     initialValues: {
       name: "",
-      phone: "",
+      phone: "",  
       address: "",
       payment: "cash on delivery",
     },
@@ -76,8 +76,6 @@ function OrderForm(props) {
       }
     },
   });
-  console.log("productDetails", productDetails.availableQty - 1);
-  console.log("productDetails", productDetails);
 
   return (
     <>

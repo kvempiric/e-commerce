@@ -1,5 +1,6 @@
 import axios from "axios";
 import { useRouter } from "next/router";
+import { Rating, ThinStar } from "@smastrom/react-rating";
 import React, { useEffect, useState } from "react";
 import "react-responsive-carousel/lib/styles/carousel.min.css"; // requires a loader
 import { Carousel } from "react-responsive-carousel";
@@ -10,7 +11,11 @@ function productId() {
   const { productId } = router.query;
   const [productDetails, setProductDetails] = useState([]);
   const [isModalOpen, setModalOpen] = useState(false);
-
+  const myRatingStyles = {
+    itemShapes: ThinStar,
+    activeFillColor: "#ffb700",
+    inactiveFillColor: "#fbf1a9",
+  };
   const fetchData = async () => {
     const response = await axios.get(
       `http://localhost:8000/product/${productId}`
@@ -62,8 +67,15 @@ function productId() {
               })}
           </Carousel>
           <div className="px-10">
-            <p className="text-5xl mb-5">{productDetails.name}</p>
-            <p>
+            <p className="text-5xl mb-2">{productDetails.name}</p>
+            <Rating
+              style={{ maxWidth: 120 }}
+              value={productDetails.rating}
+              readOnly={true}
+              halfFillMode={true}
+              itemStyles={myRatingStyles}
+            />
+            <p className="my-3">
               {productDetails.availableQty > 0 ? (
                 <strong className="text-green-700">available</strong>
               ) : (
@@ -72,7 +84,7 @@ function productId() {
             </p>
             <p className="text-4xl mb-3">₹{productDetails.price}</p>
             <p className="text-bold">Category : {productDetails.category}</p>
-            <p className="text-bold">Rating : {productDetails.rating} star</p>
+
             <button
               className="text-white bg-[#fb641b] hover:bg-blue-800 mt-5 focus:ring-4 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
               onClick={() => handleOpenModal()}

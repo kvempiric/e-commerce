@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@reduxjs/toolkit": "^2.0.1",
+    "@smastrom/react-rating": "^1.4.0",
     "axios": "^1.6.5",
     "formik": "^2.4.5",
     "next": "14.0.4",

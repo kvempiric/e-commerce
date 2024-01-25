@@ -4,7 +4,7 @@ import "@/styles/globals.css";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { Provider } from "react-redux";
-
+import '@smastrom/react-rating/style.css'
 export default function App({ Component, pageProps }) {
   const router = useRouter()
   const [isUserLogin, setIsUserLogin] = useState("");
@@ -12,7 +12,7 @@ export default function App({ Component, pageProps }) {
   useEffect(() => {
     setIsUserLogin(localStorage.getItem("e-commerce_userId"));
     if (isUserLogin) {
-      router.push("")
+      router.push("/")
     }
   }, [isUserLogin]);
   return (
