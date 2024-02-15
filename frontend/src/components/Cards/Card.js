@@ -6,10 +6,8 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 
 function Card(props) {
-  const { products, authUser, EditProduct, deleteProduct } = props;
+  const { products, authUser, EditProduct, deleteProduct, Loading } = props;
   const [productData, setProductData] = useState(products);
-  const [Loading, setLoading] = useState(false);
-  console.log("authUser", authUser);
   const router = useRouter();
   const dispatch = useDispatch();
   const myRatingStyles = {
@@ -25,16 +23,6 @@ function Card(props) {
     dispatch(remove(id));
   };
 
-  const handleinputChange = (e) => {
-    setProductData("");
-    setLoading(true);
-    const searchData = products.filter((obj) =>
-      obj.name.toLowerCase().startsWith(e.target.value.toLowerCase())
-    );
-    setProductData(searchData);
-    setLoading(false);
-  };
-
   const handleEditProduct = (data) => {
     EditProduct(data);
   };
@@ -48,19 +36,11 @@ function Card(props) {
 
   return (
     <>
-      <div className="my-6 w-full lg:w-1/2 mx-auto">
-        <input
-          type="text"
-          className="px-5 py-3 border border-1 border-black w-full rounded-full"
-          placeholder="search products here"
-          onChange={(e) => handleinputChange(e)}
-        />
-      </div>
       {Loading && (
         <div role="status" className="text-center">
           <svg
             aria-hidden="true"
-            class="inline w-8 h-8 text-gray-200 animate-spin dark:text-gray-600 fill-green-500"
+            className="inline w-8 h-8 text-gray-200 animate-spin dark:text-gray-600 fill-green-500"
             viewBox="0 0 100 101"
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
@@ -74,7 +54,7 @@ function Card(props) {
               fill="currentFill"
             />
           </svg>
-          <span class="sr-only">Loading...</span>
+          <span className="sr-only">Loading...</span>
         </div>
       )}
       <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 justify-center">
@@ -83,16 +63,18 @@ function Card(props) {
             return (
               <>
                 <div
-                  className="w-full mr-6 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700"
+                  className="w-full mr-6 mb-3 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700"
                   key={index}
                 >
-                  <Link href={`${item._id}`}>
-                    <img
-                      className="p-8 rounded-t-lg"
-                      src={`http://localhost:8000${item.mainImage}`}
-                      alt="product image"
-                    />
-                  </Link>
+                  <div className="p-5">
+                    <Link href={`${item._id}`}>
+                      <img
+                        className="rounded-t-lg h-80 w-[100%]"
+                        src={`http://localhost:8000${item.mainImage}`}
+                        alt="product image"
+                      />
+                    </Link>
+                  </div>
                   <div className="px-5 pb-5">
                     <a href="#">
                       <h5 className="text-3xl font-semibold tracking-tight text-gray-900 dark:text-white">
@@ -113,9 +95,9 @@ function Card(props) {
                     </p>
                     {authUser?.role !== "seller" && router.asPath == "/" && (
                       <button
-                        className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                        className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none mt-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
                         onClick={() => handleAddToCart(item)}
-                      >
+                      > 
                         Add to cart
                       </button>
                     )}

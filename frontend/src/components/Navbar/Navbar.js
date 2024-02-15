@@ -16,9 +16,9 @@ function Navbar() {
     checkAuth();
   }, [isUserLogin]);
   return (
-    <div className="container-fluid bg-green-500">
+    <div className="container-fluid bg-cyan-400">
       <div className="container mx-auto py-5 flex justify-between">
-        <div>
+        <div className="self-center">
           <Link href={"/"} className="text-2xl">
             E-commerce
           </Link>

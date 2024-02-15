@@ -10,6 +10,18 @@ function Subnavbar() {
   const [isLoading, setIsLoading] = useState(true);
   const [isModalOpen, setModalOpen] = useState(false);
   const [editProductData, setEditProductData] = useState({});
+  const [categoryName, setCategoryName] = useState();
+
+  const categoryList = [
+    "All",
+    "Phones",
+    "Electronics",
+    "Sports",
+    "Jewellery",
+    "Watches",
+    "Clothes",
+    "Footwear",
+  ];
 
   const [Alertpop, setAlertpop] = useState({
     show: false,
@@ -58,13 +70,15 @@ function Subnavbar() {
     fetchData();
   }, []);
 
-  const handleClick = (e) => {
-    if (e.target.value === "all") {
+  const handleSelect = (cetegory) => {
+    setCategoryName(cetegory);
+    if (cetegory === "All") {
       setFilterData(products);
     } else {
       const productFilterData = products.filter(
-        (item) => item.category === e.target.value
+        (item) => item.category === cetegory
       );
+      console.log("products", productFilterData);
       setFilterData(productFilterData);
     }
   };
@@ -98,67 +112,50 @@ function Subnavbar() {
     setModalOpen(false);
   };
 
+  const handleinputChange = (e) => {
+    setIsLoading(true);
+    const searchData = products.filter((obj) =>
+      obj.name.toLowerCase().startsWith(e.target.value.toLowerCase())
+    );
+    setFilterData(searchData);
+    setIsLoading(false);
+  };
+
   return (
     <>
       {Alertpop.show ? <AlertMessage Alertpop={Alertpop} /> : ""}
-      <div className="container mx-auto py-5 border-2">
-        <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-8 gap-0 justify-center">
-          <button
-            className="mx-auto bg-slate-700 text-white px-6 py-3 rounded-3xl mb-4 md:mb-4"
-            value={"all"}
-            onClick={(e) => handleClick(e)}
-          >
-            All
-          </button>
-          <button
-            className="mx-auto bg-slate-700 text-white px-6 py-3 rounded-3xl mb-4 md:mb-4"
-            value={"phone"}
-            onClick={(e) => handleClick(e)}
-          >
-            Phone
-          </button>
-          <button
-            className="mx-auto bg-slate-700 text-white px-6 py-3 rounded-3xl mb-4 md:mb-4"
-            value={"electronics"}
-            onClick={(e) => handleClick(e)}
-          >
-            Electronics
-          </button>
-          <button
-            className="mx-auto bg-slate-700 text-white px-6 py-3 rounded-3xl mb-4 md:mb-4"
-            value={"watches"}
-            onClick={(e) => handleClick(e)}
-          >
-            Watches
-          </button>
-          <button
-            className="mx-auto bg-slate-700 text-white px-6 py-3 rounded-3xl mb-4 md:mb-4"
-            value={"sports"}
-            onClick={(e) => handleClick(e)}
-          >
-            Sports
-          </button>
-          <button
-            className="mx-auto bg-slate-700 text-white px-6 py-3 rounded-3xl mb-4 md:mb-4"
-            value={"cloths"}
-            onClick={(e) => handleClick(e)}
-          >
-            Cloths
-          </button>
-          <button
-            className="mx-auto bg-slate-700 text-white px-6 py-3 rounded-3xl mb-4 md:mb-4"
-            value={"footwear"}
-            onClick={(e) => handleClick(e)}
-          >
-            Footwear
-          </button>
-          <button
-            className="mx-auto bg-slate-700 text-white px-6 py-3 rounded-3xl mb-4 md:mb-4"
-            value={"jewellery"}
-            onClick={(e) => handleClick(e)}
-          >
-            Jewellery
-          </button>
+      <div className="container mx-auto py-5">
+        <div className="grid grid-cols-2 gap-4">
+          <div className="self-center">
+            <input
+              type="text"
+              className="px-5 py-3 w-full border border-1 border-black rounded-full"
+              placeholder="search products here"
+              onChange={(e) => handleinputChange(e)}
+            />
+          </div>
+          <div className="justify-self-end">
+            <label
+              for="qty"
+              className="block mb-2 me-2 text-md font-medium text-gray-900 dark:text-white"
+            >
+              Filter Categories
+            </label>
+            <select
+              id="qty"
+              className="bg-gray-50 border w-full lg:w-60 border-gray-300 text-gray-900 text-md rounded-lg focus:ring-primary-500 focus:border-primary-500 block p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+              onChange={(e) => {
+                handleSelect(e.target.value);
+              }}
+              value={categoryName}
+            >
+              {categoryList.map((value) => (
+                <option key={value} value={value} className="text-md">
+                  {value}
+                </option>
+              ))}
+            </select>
+          </div>
         </div>
       </div>
       <div className="container mx-auto">
@@ -168,6 +165,7 @@ function Subnavbar() {
             authUser={authUser}
             deleteProduct={handleDeleteProduct}
             EditProduct={handleEditProduct}
+            Loading={isLoading}
           />
         )}
       </div>
